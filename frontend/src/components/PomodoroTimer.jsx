@@ -65,11 +65,11 @@ function PomodoroTimer() {
 
   return (
     <div className="flex flex-col items-center">
-      
+
       {/* Session Settings */}
-      <div className="grid grid-cols-2 gap-4 lg:gap-8 mb-10 w-full bg-white border border-gray-100 shadow-sm rounded-3xl p-4 sm:p-6 lg:p-8 border-l-4 border-l-emerald-500">
+      <div className="grid grid-cols-2 gap-4 lg:gap-8 mb-5 w-full bg-white border border-gray-100 shadow-sm rounded-3xl p-2 sm:p-6 lg:p-8 border-l-4 border-l-emerald-500">
         <div className="flex flex-col">
-          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">WORK SESSION</label>
+          <label className="text-[8px] font-bold uppercase tracking-widest text-gray-400 mb-3">WORK SESSION</label>
           <div className="flex items-center gap-3">
             <input
               type="number"
@@ -84,7 +84,7 @@ function PomodoroTimer() {
           </div>
         </div>
         <div className="flex flex-col">
-          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">BREAK TIME</label>
+          <label className="text-[8px] font-bold uppercase tracking-widest text-gray-400 mb-3">BREAK TIME</label>
           <div className="flex items-center gap-3">
             <input
               type="number"
@@ -107,13 +107,13 @@ function PomodoroTimer() {
           : 'bg-white border-gray-50 shadow-gray-700/5'
         }`}>
 
-          <div className="absolute top-0 left-0 w-full h-1 sm:h-1.5 bg-gray-100 overflow-hidden">
-            <div
-              className={`h-full transition-all duration-1000 ${isBreak ? 'bg-emerald-400' : 'bg-emerald-600'
-                }`}
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+        <div className="absolute top-0 left-0 w-full h-1 sm:h-1.5 bg-gray-100 overflow-hidden">
+          <div
+            className={`h-full transition-all duration-1000 ${isBreak ? 'bg-emerald-400' : 'bg-emerald-600'
+              }`}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
 
         <p className={`text-[10px] sm:text-xs font-bold uppercase tracking-[0.5em] mb-6 sm:mb-8 transition-colors
         ${isBreak ? 'text-emerald-700' : 'text-gray-400'}
@@ -153,11 +153,6 @@ function PomodoroTimer() {
         </div>
       </div>
 
-      <p className="text-[10px] sm:text-[11px] text-gray-400 mt-10 font-bold uppercase tracking-[0.3em] flex items-center gap-4">
-        <span>STRAT: {workMinutes}–{breakMinutes}</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/20"></span>
-        <span>CONFIG_OK</span>
-      </p>
     </div>
   );
 }
