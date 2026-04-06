@@ -16,6 +16,9 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 app.use(cors({
+  origin: 'https://edulix.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
   exposedHeaders: ['X-Original-Size', 'X-Compressed-Size', 'X-Total-Pages']
 }));
 app.use(express.json());
