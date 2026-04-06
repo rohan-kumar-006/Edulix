@@ -37,7 +37,7 @@ function PdfMerger() {
 
   const handleMerge = async () => {
     if (files.length < 2) {
-      setError('Please add at least 2 PDF files');
+      setError('Please add at least 2 PDF files to merge.');
       return;
     }
 
@@ -56,7 +56,7 @@ function PdfMerger() {
       setDownloadUrl(URL.createObjectURL(blob));
       setDone(true);
     } catch {
-      setError('Failed to merge PDFs');
+      setError('Failed to merge PDFs. All files must be valid documents.');
     } finally {
       setLoading(false);
     }
@@ -77,120 +77,105 @@ function PdfMerger() {
   };
 
   return (
-    <div className="max-w-xl mx-auto">
-
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">PDF Merger</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Upload multiple PDFs and arrange their order
-        </p>
+    <div className="w-full">
+      <div className="mb-6 pb-6 border-b border-gray-100">
+        <h2 className="text-lg sm:text-xl font-bold font-sans text-gray-900 tracking-tight">PDF Merger</h2>
+        <p className="text-sm text-gray-400 mt-1 font-medium italic">Join documents into a single master file.</p>
       </div>
 
-      <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
+      <div className="mb-10">
+        <label className="block text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-3">Upload PDF Files</label>
+        <input
+          type="file"
+          accept=".pdf"
+          multiple
+          onChange={handleFilesChange}
+          className="block w-full text-xs text-gray-400
+            file:mr-4 file:py-2.5 file:px-6 file:rounded-xl
+            file:border-0 file:text-xs file:font-bold
+            file:bg-emerald-50 file:text-emerald-700
+            hover:file:bg-emerald-100 transition-all cursor-pointer"
+        />
+        <p className="text-[10px] text-gray-400 mt-3 font-semibold text-center sm:text-left tracking-wide uppercase">Select 2+ PDF files. LIMIT 50MB.</p>
+      </div>
 
-        <div className="mb-6">
-          <input
-            type="file"
-            accept=".pdf"
-            multiple
-            onChange={handleFilesChange}
-            className="block w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4 file:rounded-lg
-              file:border file:border-gray-200 file:text-sm file:font-medium
-              file:bg-gray-50 file:text-gray-700
-              hover:file:bg-gray-100 transition"
-          />
+      {files.length > 0 && !done && (
+        <div className="mb-10 p-4 sm:p-6 bg-gray-50 border border-gray-100 rounded-2xl">
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-emerald-700 mb-6">MERGE SEQUENCE:</label>
+          <div className="space-y-3">
+            {files.map((item, i) => (
+              <div
+                key={i}
+                className="flex flex-col sm:flex-row items-center gap-4 bg-white rounded-xl p-4 sm:px-6 border border-gray-100 shadow-sm"
+              >
+                <span className="text-[10px] sm:text-xs font-bold text-gray-400 font-mono w-6 text-center">0{i + 1}</span>
+                <span className="flex-1 text-sm font-bold text-gray-900 truncate w-full sm:w-auto text-center sm:text-left">{item.name}</span>
+                <div className="flex gap-2 w-full sm:w-auto justify-center">
+                  <button
+                    onClick={() => moveUp(i)}
+                    disabled={i === 0}
+                    className="flex-1 sm:flex-none p-2 bg-emerald-50 border border-emerald-100 rounded-lg text-emerald-700 disabled:opacity-20 transition-all hover:bg-emerald-100"
+                  >
+                    <svg className="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" /></svg>
+                  </button>
+                  <button
+                    onClick={() => moveDown(i)}
+                    disabled={i === files.length - 1}
+                    className="flex-1 sm:flex-none p-2 bg-emerald-50 border border-emerald-100 rounded-lg text-emerald-700 disabled:opacity-20 transition-all hover:bg-emerald-100"
+                  >
+                    <svg className="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
+                  <button
+                    onClick={() => removeFile(i)}
+                    className="flex-1 sm:flex-none p-2 bg-red-50 border border-red-100 rounded-lg text-red-600 hover:bg-red-100 transition-all"
+                  >
+                    <svg className="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+      )}
 
-        {files.length > 0 && !done && (
-          <div className="mb-6">
-            <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
-              Merge Order
-            </p>
+      {error && (
+        <div className="bg-red-50 text-red-600 text-xs px-5 py-4 rounded-xl border border-red-100/50 mb-8 font-medium">
+          {error}
+        </div>
+      )}
+      {done && (
+        <div className="bg-emerald-50 text-emerald-700 text-xs px-5 py-4 rounded-xl border border-emerald-100/50 mb-8 font-bold flex items-center justify-center gap-3">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+          DOCUMENTS MERGED SUCCESSFULLY.
+        </div>
+      )}
 
-            <ul className="space-y-2">
-              {files.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3"
-                >
-                  <span className="text-xs font-semibold text-emerald-600 w-5 text-center">
-                    {i + 1}
-                  </span>
-
-                  <span className="text-sm text-gray-800 flex-1 truncate">
-                    {item.name}
-                  </span>
-
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => moveUp(i)}
-                      disabled={i === 0}
-                      className="px-2 py-1 text-xs rounded-md bg-white border border-gray-200 hover:bg-gray-100 disabled:opacity-30"
-                    >
-                      ↑
-                    </button>
-
-                    <button
-                      onClick={() => moveDown(i)}
-                      disabled={i === files.length - 1}
-                      className="px-2 py-1 text-xs rounded-md bg-white border border-gray-200 hover:bg-gray-100 disabled:opacity-30"
-                    >
-                      ↓
-                    </button>
-
-                    <button
-                      onClick={() => removeFile(i)}
-                      className="px-2 py-1 text-xs rounded-md bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+        {files.length >= 2 && !done && (
+          <button
+            onClick={handleMerge}
+            disabled={loading}
+            className="w-full sm:w-auto px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 tracking-tight text-sm transition-all shadow-sm flex items-center justify-center"
+          >
+            {loading ? 'MERGING...' : 'PROCEED TO MERGE'}
+          </button>
         )}
-
-        {error && (
-          <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
-            {error}
-          </div>
-        )}
-
         {done && (
-          <div className="mb-4 text-sm text-green-700 bg-green-50 border border-green-100 px-4 py-2 rounded-lg">
-            PDFs merged successfully
-          </div>
-        )}
-
-        <div className="flex gap-3">
-          {!done ? (
+          <>
             <button
-              onClick={handleMerge}
-              disabled={loading}
-              className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition shadow-sm disabled:opacity-50"
+              onClick={handleDownload}
+              className="w-full sm:w-auto px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-black tracking-tight text-sm transition-all shadow-sm shadow-gray-200"
             >
-              {loading ? 'Merging...' : 'Merge PDFs'}
+              DOWNLOAD EXPORT
             </button>
-          ) : (
-            <>
-              <button
-                onClick={handleDownload}
-                className="px-5 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-black transition"
-              >
-                Download
-              </button>
-
-              <button
-                onClick={handleReset}
-                className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200"
-              >
-                Reset
-              </button>
-            </>
-          )}
-        </div>
+            <button
+              onClick={handleReset}
+              className="w-full sm:w-auto px-8 py-3 bg-gray-100 text-gray-600 border border-gray-200 rounded-xl font-bold hover:bg-gray-200 tracking-tight text-sm transition-all"
+            >
+              START NEW SESSION
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

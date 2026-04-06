@@ -54,100 +54,78 @@ function BackgroundRemover() {
   };
 
   return (
-    <div className="max-w-xl mx-auto">
-
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Background Remover</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Remove background from any image
-        </p>
+    <div className="w-full">
+      <div className="mb-6 pb-6 border-b border-gray-100">
+        <h2 className="text-lg sm:text-xl font-bold font-sans text-gray-900 tracking-tight">Background Remover</h2>
+        <p className="text-sm text-gray-400 mt-1 font-medium">Automatic context-aware transparency.</p>
       </div>
 
-      <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
+      <div className="mb-10">
+        <label className="block text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-3">Upload Image</label>
+        <input
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          onChange={handleFileChange}
+          className="block w-full text-xs text-gray-500
+            file:mr-4 file:py-2.5 file:px-6 file:rounded-xl
+            file:border-0 file:text-xs file:font-bold
+            file:bg-emerald-50 file:text-emerald-700
+            hover:file:bg-emerald-100 transition-all cursor-pointer"
+        />
+        <p className="text-[10px] text-gray-400 mt-3 font-semibold text-center sm:text-left tracking-wide">JPG, PNG OR WEBP. LIMIT 10MB.</p>
+      </div>
 
-        <div className="mb-6">
-          <input
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            onChange={handleFileChange}
-            className="block w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4 file:rounded-lg
-              file:border file:border-gray-200 file:text-sm file:font-medium
-              file:bg-gray-50 file:text-gray-700
-              hover:file:bg-gray-100 transition"
-          />
+      {error && (
+        <div className="bg-red-50 text-red-600 text-xs px-5 py-4 rounded-xl border border-red-100/50 mb-8 font-medium">
+          {error}
         </div>
+      )}
 
-        {error && (
-          <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-100 px-4 py-2 rounded-lg">
-            {error}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 mb-10">
+        {preview && (
+          <div className="w-full">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">Before</span>
+            <div className="border border-gray-100 rounded-2xl p-3 bg-gray-50 flex items-center justify-center overflow-hidden">
+              <img src={preview} alt="Before" className="max-h-60 sm:max-h-80 object-contain rounded-lg" />
+            </div>
           </div>
         )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-
-          {preview && (
-            <div>
-              <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
-                Original
-              </p>
-              <div className="border border-gray-100 rounded-xl p-4 bg-gray-50">
-                <img
-                  src={preview}
-                  alt="Original"
-                  className="max-h-64 mx-auto object-contain"
-                />
-              </div>
+        {result && (
+          <div className="w-full">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">After</span>
+            <div className="checkerboard border border-gray-100 rounded-2xl p-3 flex items-center justify-center overflow-hidden bg-white">
+              <img src={result} alt="After" className="max-h-60 sm:max-h-80 object-contain rounded-lg" />
             </div>
-          )}
+          </div>
+        )}
+      </div>
 
-          {result && (
-            <div>
-              <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">
-                Result
-              </p>
-              <div className="border border-gray-100 rounded-xl p-4 bg-white">
-                <img
-                  src={result}
-                  alt="Result"
-                  className="max-h-64 mx-auto object-contain"
-                />
-              </div>
-            </div>
-          )}
-
-        </div>
-
-        <div className="flex gap-3">
-          {!result ? (
-            file && (
-              <button
-                onClick={handleRemove}
-                disabled={loading}
-                className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition shadow-sm disabled:opacity-50"
-              >
-                {loading ? 'Processing...' : 'Remove Background'}
-              </button>
-            )
-          ) : (
-            <>
-              <button
-                onClick={handleDownload}
-                className="px-5 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-black transition"
-              >
-                Download PNG
-              </button>
-
-              <button
-                onClick={handleReset}
-                className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200"
-              >
-                Try Another
-              </button>
-            </>
-          )}
-        </div>
-
+      <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+        {file && !result && (
+          <button
+            onClick={handleRemove}
+            disabled={loading}
+            className="w-full sm:w-auto px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 disabled:opacity-50 tracking-tight text-sm transition-all shadow-sm flex items-center justify-center"
+          >
+            {loading ? 'PROCESSING...' : 'REMOVE BACKGROUND'}
+          </button>
+        )}
+        {result && (
+          <>
+            <button
+              onClick={handleDownload}
+              className="w-full sm:w-auto px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-black tracking-tight text-sm transition-all shadow-sm"
+            >
+              DOWNLOAD PNG
+            </button>
+            <button
+              onClick={handleReset}
+              className="w-full sm:w-auto px-8 py-3 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 tracking-tight text-sm transition-all border border-gray-200/50"
+            >
+              START OVER
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
